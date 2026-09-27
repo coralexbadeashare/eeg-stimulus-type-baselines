@@ -1,0 +1,31 @@
+task,config,description,model,n_test,bal_acc,perm_null_mean,perm_p,bal_acc_sd,bal_testdays_May07_08,bal_May-06,bal_May-07,bal_May-08
+stimtype,A,train May-06 + May-07 -> test May-08,logreg,288.0,0.506,0.385,0.0199,,,,,
+stimtype,A,train May-06 + May-07 -> test May-08,logreg_no_session_norm,288.0,0.192,,,,,,,
+stimtype,A,train May-06 + May-07 -> test May-08,eegnet_s1,288.0,0.376,,,,,,,
+stimtype,A,train May-06 + May-07 -> test May-08,eegnet_s2,288.0,0.572,,,,,,,
+stimtype,A,train May-06 + May-07 -> test May-08,eegnet_s3,288.0,0.456,,,,,,,
+stimtype,A,train May-06 + May-07 -> test May-08,eegnet_mean_seeds,,0.468,,,0.08,,,,
+stimtype,B,train May-07 only -> test May-08,logreg,288.0,0.386,0.334,0.2985,,,,,
+stimtype,B,train May-07 only -> test May-08,logreg_no_session_norm,288.0,0.192,,,,,,,
+stimtype,B,train May-07 only -> test May-08,eegnet_s1,288.0,0.495,,,,,,,
+stimtype,B,train May-07 only -> test May-08,eegnet_s2,288.0,0.587,,,,,,,
+stimtype,B,train May-07 only -> test May-08,eegnet_s3,288.0,0.47,,,,,,,
+stimtype,B,train May-07 only -> test May-08,eegnet_mean_seeds,,0.517,,,0.05,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",logreg,288.0,0.37,0.316,0.1294,,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",logreg_no_session_norm,288.0,0.397,,,,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",eegnet_s1,288.0,0.369,,,,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",eegnet_s2,288.0,0.314,,,,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",eegnet_s3,288.0,0.368,,,,,,,
+stimtype,C,"May-08 only, leave-one-recording-out",eegnet_mean_seeds,,0.35,,,0.026,,,,
+stimtype,D,"all days, leave-one-recording-out (reference)",logreg,1028.0,0.399,,,,0.493,0.305,0.514,0.47
+stimtype,D,"all days, leave-one-recording-out (reference)",logreg_no_session_norm,1028.0,0.319,,,,0.304,0.34,0.35,0.317
+stimtype,D,"all days, leave-one-recording-out (reference)",eegnet_s1,1028.0,0.511,,,,0.602,0.417,0.624,0.597
+stimtype,D,"all days, leave-one-recording-out (reference)",eegnet_s2,1028.0,0.49,,,,0.577,0.406,0.634,0.55
+stimtype,D,"all days, leave-one-recording-out (reference)",eegnet_s3,1028.0,0.522,,,,0.549,0.484,0.586,0.535
+stimtype,D,"all days, leave-one-recording-out (reference)",eegnet_mean_seeds,,0.508,,,0.013,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",logreg,488.0,0.363,,,,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",logreg_no_session_norm,488.0,0.319,,,,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s1,488.0,0.465,,,,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s2,488.0,0.535,,,,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s3,488.0,0.504,,,,,,,
+stimtype,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_mean_seeds,,0.501,,,0.029,,,,

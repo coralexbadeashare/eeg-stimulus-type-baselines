@@ -1,0 +1,36 @@
+task,config,description,model,n_test,bal_acc,bal_image,bal_action_image,bal_video,perm_null_mean,perm_p,bal_acc_sd,bal_testdays_May07_08,bal_May-06,bal_May-07,bal_May-08
+valence,A,train May-06 + May-07 -> test May-08,logreg,239.0,0.495,0.504,0.492,0.31,0.522,0.7363,,,,,
+valence,A,train May-06 + May-07 -> test May-08,logreg_no_session_norm,239.0,0.498,0.5,0.484,0.5,,,,,,,
+valence,A,train May-06 + May-07 -> test May-08,type_only,239.0,0.648,0.5,0.5,0.5,,,,,,,
+valence,A,train May-06 + May-07 -> test May-08,eegnet_s1,239.0,0.553,0.613,0.48,0.5,,,,,,,
+valence,A,train May-06 + May-07 -> test May-08,eegnet_s2,239.0,0.515,0.47,0.458,0.571,,,,,,,
+valence,A,train May-06 + May-07 -> test May-08,eegnet_s3,239.0,0.62,0.535,0.623,0.571,,,,,,,
+valence,A,train May-06 + May-07 -> test May-08,eegnet_mean_seeds,,0.563,,,,,,0.043,,,,
+valence,B,train May-07 only -> test May-08,logreg,239.0,0.475,0.458,0.451,0.421,0.511,0.801,,,,,
+valence,B,train May-07 only -> test May-08,logreg_no_session_norm,239.0,0.455,0.501,0.511,0.5,,,,,,,
+valence,B,train May-07 only -> test May-08,type_only,239.0,0.648,0.5,0.5,0.5,,,,,,,
+valence,B,train May-07 only -> test May-08,eegnet_s1,239.0,0.532,0.516,0.487,0.472,,,,,,,
+valence,B,train May-07 only -> test May-08,eegnet_s2,239.0,0.534,0.554,0.504,0.52,,,,,,,
+valence,B,train May-07 only -> test May-08,eegnet_s3,239.0,0.503,0.441,0.502,0.421,,,,,,,
+valence,B,train May-07 only -> test May-08,eegnet_mean_seeds,,0.523,,,,,,0.014,,,,
+valence,C,"May-08 only, leave-one-recording-out",logreg,239.0,0.539,0.468,0.527,0.679,0.495,1.0,,,,,
+valence,C,"May-08 only, leave-one-recording-out",logreg_no_session_norm,239.0,0.454,0.478,0.461,0.679,,,,,,,
+valence,C,"May-08 only, leave-one-recording-out",type_only,239.0,0.601,0.5,0.5,0.377,,,,,,,
+valence,C,"May-08 only, leave-one-recording-out",eegnet_s1,239.0,0.538,0.527,0.543,0.409,,,,,,,
+valence,C,"May-08 only, leave-one-recording-out",eegnet_s2,239.0,0.467,0.515,0.5,0.472,,,,,,,
+valence,C,"May-08 only, leave-one-recording-out",eegnet_s3,239.0,0.485,0.663,0.436,0.575,,,,,,,
+valence,C,"May-08 only, leave-one-recording-out",eegnet_mean_seeds,,0.497,,,,,,0.03,,,,
+valence,D,"all days, leave-one-recording-out (reference)",logreg,803.0,0.521,0.494,0.49,0.523,,,,0.501,0.53,0.513,0.487
+valence,D,"all days, leave-one-recording-out (reference)",logreg_no_session_norm,803.0,0.525,0.518,0.478,0.572,,,,0.513,0.538,0.514,0.522
+valence,D,"all days, leave-one-recording-out (reference)",type_only,803.0,0.646,0.5,0.5,0.5,,,,0.653,0.635,0.655,0.648
+valence,D,"all days, leave-one-recording-out (reference)",eegnet_s1,803.0,0.52,0.545,0.492,0.515,,,,0.52,0.514,0.536,0.513
+valence,D,"all days, leave-one-recording-out (reference)",eegnet_s2,803.0,0.514,0.531,0.5,0.538,,,,0.495,0.519,0.518,0.484
+valence,D,"all days, leave-one-recording-out (reference)",eegnet_s3,803.0,0.573,0.573,0.53,0.577,,,,0.573,0.561,0.576,0.567
+valence,D,"all days, leave-one-recording-out (reference)",eegnet_mean_seeds,,0.536,,,,,,0.027,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",logreg,404.0,0.472,0.518,0.42,0.443,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",logreg_no_session_norm,404.0,0.455,0.507,0.461,0.542,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",type_only,404.0,0.653,0.5,0.5,0.5,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s1,404.0,0.538,0.557,0.507,0.479,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s2,404.0,0.501,0.505,0.492,0.536,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_s3,404.0,0.521,0.605,0.503,0.604,,,,,,,
+valence,E,"May-07 + May-08 only, leave-one-recording-out (D without the first day)",eegnet_mean_seeds,,0.52,,,,,,0.015,,,,
