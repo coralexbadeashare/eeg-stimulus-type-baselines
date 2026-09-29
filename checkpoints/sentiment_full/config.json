@@ -1,0 +1,55 @@
+{
+  "task": "valence",
+  "classes": [
+    "negative",
+    "positive"
+  ],
+  "config": "ALL",
+  "description": "train on all three days (final model; its expected accuracy on a new recording is config D)",
+  "folds": [
+    {
+      "tag": "ALL",
+      "n_train": 803,
+      "n_test": 0,
+      "train_counts": [
+        248,
+        555
+      ],
+      "test_counts": [
+        0,
+        0
+      ]
+    }
+  ],
+  "logreg": {
+    "features": "features.de_features: differential entropy, 4 x 1 s windows x 5 bands x 30 channels = 600",
+    "C": 0.5,
+    "class_weight": "balanced",
+    "max_iter": 5000
+  },
+  "eegnet": {
+    "input": "features.raw_input",
+    "epoch_selection": "best balanced accuracy on a 15% stratified holdout of the training data",
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "F1": 8,
+    "D": 2,
+    "F2": 16,
+    "k": 64,
+    "drop": 0.5,
+    "lr": 0.001,
+    "wd": 0.01,
+    "batch": 32,
+    "max_epochs": 150,
+    "patience": 25,
+    "val_frac": 0.15,
+    "noise": 0.1
+  },
+  "controls": [
+    "200 label permutations (logreg)",
+    "stimulus type only, no EEG"
+  ]
+}

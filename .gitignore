@@ -1,4 +1,5 @@
 runs/
+runs_random/
 __pycache__/
 *.pyc
 predictions*.csv

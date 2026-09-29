@@ -54,7 +54,8 @@ def main():
     out = meta.copy()
 
     lr = load_logreg(os.path.join(a.ckpt, "logreg.joblib"))
-    p_lr = logreg_proba(lr, normalize_session(np.stack([de_features(e) for e in X])))
+    F = np.stack([de_features(e) for e in X])
+    p_lr = logreg_proba(lr, normalize_session(F) if lr.get("session_norm", True) else F)
     R = np.stack([raw_input(e) for e in X])
     seeds = sorted(glob.glob(os.path.join(a.ckpt, "eegnet_seed*.pt")))
     p_eeg = np.mean([eegnet_proba(load_eegnet(s)[0], R) for s in seeds], axis=0)

@@ -14,6 +14,7 @@ Configurations (recording days: May-06, May-07, May-08)
   E  May-07 + May-08 only, leave-one-recording-out  (= D without the first day)
   CAL  calibration: first 70% of each recording (by time) -> train, last 30% -> test
        (how a BCI is used: calibrate at the start of a session, then predict)
+  R    random stratified 80/20 trial split, 5 splits
   ALL  train on every trial -> the final checkpoints; expected accuracy on a new recording = D
   D vs E on the same May-07/08 test folds isolates what the first day adds or costs.
 
@@ -160,7 +161,17 @@ def cal_split(rec, onset, frac=0.7):
     return ("CAL", np.array(tr), np.array(te))
 
 
-def build_configs(day, rec, onset):
+def random_splits(y, n=5, frac=0.2):
+    out = []
+    for seed in range(1, n + 1):
+        rng = np.random.default_rng(seed); tr, te = [], []
+        for c in np.unique(y):
+            idx = np.where(y == c)[0]; rng.shuffle(idx); k = int(frac * len(idx)); te += list(idx[:k]); tr += list(idx[k:])
+        out.append((f"R{seed}", np.array(sorted(tr)), np.array(sorted(te))))
+    return out
+
+
+def build_configs(day, rec, onset, y):
     ALL = np.arange(len(day)); last, mid = day == LAST, day == MID
     lo = lambda mask, p: [(f"{p}-{r}", ALL[mask & (rec != r)], ALL[mask & (rec == r)]) for r in sorted(np.unique(rec[mask]))]
     return {
@@ -170,6 +181,7 @@ def build_configs(day, rec, onset):
         "D": ("all days, leave-one-recording-out (reference)", lo(np.ones(len(day), bool), "D")),
         "E": ("May-07 + May-08 only, leave-one-recording-out (D without the first day)", lo(last | mid, "E")),
         "CAL": ("calibration: first 70% of every recording (by time) -> train, last 30% -> test", [cal_split(rec, onset)]),
+        "R": ("random stratified 80/20 trial split, 5 splits", random_splits(y)),
         "ALL": ("train on all three days (final model; its expected accuracy on a new recording is config D)",
                 [("ALL", ALL, np.array([], dtype=np.int64))]),
     }
@@ -181,7 +193,9 @@ def main():
     ap.add_argument("--task", choices=list(TASKS), default="valence")
     ap.add_argument("--data", required=True, help="local dataset folder (datasets.load_from_disk)")
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs"))
-    ap.add_argument("--configs", default="A,B,C,D,E,CAL,ALL")
+    ap.add_argument("--configs", default="A,B,C,D,E,CAL,R,ALL")
+    ap.add_argument("--lr_norm", choices=["session", "none"], default="session",
+                    help="feature normalisation of the saved ALL logistic regression")
     ap.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3])
     ap.add_argument("--n_perm", type=int, default=200)
     ap.add_argument("--workers", type=int, default=20)
@@ -208,7 +222,7 @@ def main():
     print(f"[{a.task}] {len(y)} trials, classes {dict(zip(classes, np.bincount(y, minlength=n_cls)))}, "
           f"days {pd.Series(day).value_counts().sort_index().to_dict()}")
 
-    configs = {k: v for k, v in build_configs(day, rec, meta.stimulus_onset_unix.values).items() if k in a.configs.split(",")}
+    configs = {k: v for k, v in build_configs(day, rec, meta.stimulus_onset_unix.values, y).items() if k in a.configs.split(",")}
     jobs = []
     for name, (desc, folds) in configs.items():
         d = os.path.join(out, name); os.makedirs(d, exist_ok=True)
@@ -242,6 +256,12 @@ def main():
             yt, pp, ii = pooled.setdefault(k, ([], [], [])); yt.extend(y[te]); pp.extend(pr); ii.extend(te)
 
         for tag, tr, te in folds:
+            if name == "ALL" and a.lr_norm == "none":
+                sc0, lr0 = logreg_fit(DE[tr], y[tr])
+                joblib.dump(dict(scaler=sc0, model=lr0, task=a.task, classes=classes, trained_on=desc,
+                                 session_norm=False, features="features.de_features"),
+                            os.path.join(out, name, "logreg.joblib"))
+                continue
             sc, lr = logreg_fit(DEr[tr], y[tr])
             if name == "ALL":
                 joblib.dump(dict(scaler=sc, model=lr, task=a.task, classes=classes, trained_on=desc,

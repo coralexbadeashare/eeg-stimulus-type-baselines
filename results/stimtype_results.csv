@@ -109,3 +109,8 @@ stimtype,E,E-may86,logreg_no_session_norm,,398,90,0.466,,
 stimtype,E,E-may86,eegnet,1,398,90,0.572,72.0,0.768
 stimtype,E,E-may86,eegnet,2,398,90,0.674,41.0,0.627
 stimtype,E,E-may86,eegnet,3,398,90,0.607,119.0,0.782
+stimtype,CAL,CAL,logreg,,720,308,0.424,,
+stimtype,CAL,CAL,logreg_no_session_norm,,720,308,0.483,,
+stimtype,CAL,CAL,eegnet,1,720,308,0.52,54.0,0.642
+stimtype,CAL,CAL,eegnet,2,720,308,0.527,141.0,0.678
+stimtype,CAL,CAL,eegnet,3,720,308,0.518,21.0,0.679

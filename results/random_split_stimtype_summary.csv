@@ -1,0 +1,7 @@
+task,config,description,model,n_test,bal_acc,bal_acc_sd
+stimtype,R,"random stratified 80/20 trial split, 5 splits",logreg,1020.0,0.574,
+stimtype,R,"random stratified 80/20 trial split, 5 splits",logreg_no_session_norm,1020.0,0.664,
+stimtype,R,"random stratified 80/20 trial split, 5 splits",eegnet_s1,1020.0,0.617,
+stimtype,R,"random stratified 80/20 trial split, 5 splits",eegnet_s2,1020.0,0.609,
+stimtype,R,"random stratified 80/20 trial split, 5 splits",eegnet_s3,1020.0,0.604,
+stimtype,R,"random stratified 80/20 trial split, 5 splits",eegnet_mean_seeds,,0.61,0.005
