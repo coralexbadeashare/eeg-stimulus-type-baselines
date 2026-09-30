@@ -1,8 +1,0 @@
-task,config,description,model,n_test,bal_acc,bal_image,bal_action_image,bal_video,bal_acc_sd
-valence,R,"random stratified 80/20 trial split, 5 splits",logreg,800.0,0.575,0.558,0.535,0.591,
-valence,R,"random stratified 80/20 trial split, 5 splits",logreg_no_session_norm,800.0,0.593,0.536,0.527,0.641,
-valence,R,"random stratified 80/20 trial split, 5 splits",type_only,800.0,0.628,0.5,0.5,0.5,
-valence,R,"random stratified 80/20 trial split, 5 splits",eegnet_s1,800.0,0.497,0.503,0.437,0.543,
-valence,R,"random stratified 80/20 trial split, 5 splits",eegnet_s2,800.0,0.498,0.478,0.46,0.547,
-valence,R,"random stratified 80/20 trial split, 5 splits",eegnet_s3,800.0,0.551,0.562,0.484,0.627,
-valence,R,"random stratified 80/20 trial split, 5 splits",eegnet_mean_seeds,,0.515,,,,0.025

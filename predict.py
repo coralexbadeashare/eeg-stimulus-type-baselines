@@ -15,7 +15,7 @@ Examples
 """
 import argparse, glob, json, os, numpy as np, pandas as pd
 
-from features import de_features, raw_input
+from features import de_features, raw_input, is_empty
 from models import load_eegnet, load_logreg, eegnet_proba, logreg_proba, normalize_session
 
 
@@ -54,14 +54,20 @@ def main():
     out = meta.copy()
 
     lr = load_logreg(os.path.join(a.ckpt, "logreg.joblib"))
-    F = np.stack([de_features(e) for e in X])
+    alive = np.array([not is_empty(e) for e in X])
+    if (~alive).any():
+        print(f"{(~alive).sum()} empty trials (all channels flat) get no prediction")
+    Xa = X[alive]
+    F = np.stack([de_features(e) for e in Xa])
     p_lr = logreg_proba(lr, normalize_session(F) if lr.get("session_norm", True) else F)
-    R = np.stack([raw_input(e) for e in X])
+    R = np.stack([raw_input(e) for e in Xa])
     seeds = sorted(glob.glob(os.path.join(a.ckpt, "eegnet_seed*.pt")))
     p_eeg = np.mean([eegnet_proba(load_eegnet(s)[0], R) for s in seeds], axis=0)
 
-    for name, P in [("logreg", p_lr), ("eegnet", p_eeg)]:
-        out[f"{name}_pred"] = [classes[k] for k in P.argmax(1)]
+    out["empty_trial"] = ~alive
+    for name, Pa in [("logreg", p_lr), ("eegnet", p_eeg)]:
+        P = np.full((len(X), len(classes)), np.nan); P[alive] = Pa
+        out[f"{name}_pred"] = [classes[int(np.argmax(r))] if ok else "empty" for r, ok in zip(P, alive)]
         for k, c in enumerate(classes):
             out[f"{name}_p_{c}"] = P[:, k].round(4)
     out.to_csv(a.out, index=False)

@@ -10,12 +10,12 @@
   "folds": [
     {
       "tag": "ALL",
-      "n_train": 1028,
+      "n_train": 910,
       "n_test": 0,
       "train_counts": [
-        462,
-        188,
-        378
+        377,
+        185,
+        348
       ],
       "test_counts": [
         0,

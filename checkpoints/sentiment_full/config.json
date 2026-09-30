@@ -9,11 +9,11 @@
   "folds": [
     {
       "tag": "ALL",
-      "n_train": 803,
+      "n_train": 712,
       "n_test": 0,
       "train_counts": [
-        248,
-        555
+        224,
+        488
       ],
       "test_counts": [
         0,

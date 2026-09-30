@@ -18,6 +18,10 @@ Configurations (recording days: May-06, May-07, May-08)
   ALL  train on every trial -> the final checkpoints; expected accuracy on a new recording = D
   D vs E on the same May-07/08 test folds isolates what the first day adds or costs.
 
+Data
+  Trials whose EEG is flat on every channel (the headset was not recording; 231 of 1028) are
+  dropped before anything else. Use --keep_empty to reproduce the old behaviour.
+
 Evaluation rules
   - EEGNet picks its epoch on 15% of the TRAINING data (stratified), never on test.
   - Logistic regression: fixed C=0.5, class-balanced, no tuning. Its 600 DE features are
@@ -39,7 +43,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import balanced_accuracy_score
 import joblib
 
-from features import de_features, raw_input, POSITIVE, NEGATIVE, ONSET, WIN, SFREQ
+from features import de_features, raw_input, is_empty, POSITIVE, NEGATIVE, ONSET, WIN, SFREQ
 
 TASKS = {"valence": ["negative", "positive"], "stimtype": ["image", "video", "action_image"]}
 EEGNET = dict(F1=8, D=2, F2=16, k=64, drop=0.5, lr=1e-3, wd=1e-2, batch=32,
@@ -200,6 +204,7 @@ def main():
     ap.add_argument("--n_perm", type=int, default=200)
     ap.add_argument("--workers", type=int, default=20)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--keep_empty", action="store_true", help="keep all-zero trials (not recommended)")
     a = ap.parse_args()
     if a.smoke:
         EEGNET.update(max_epochs=3); a.seeds = [1]; a.n_perm = 5
@@ -210,6 +215,10 @@ def main():
     keep = np.where(meta.emotion.isin(POSITIVE | NEGATIVE))[0] if a.task == "valence" else np.arange(len(meta))
     meta = meta.iloc[keep].reset_index(drop=True)
     raw = [np.asarray(ds[int(i)]["eeg_epoch"], dtype=np.float32) for i in keep]
+    alive = np.array([not is_empty(e) for e in raw])      # garbage in, garbage out: drop all-zero trials
+    if not a.keep_empty:
+        meta = meta[alive].reset_index(drop=True); raw = [e for e, k in zip(raw, alive) if k]
+    print(f"[{a.task}] dropped {int((~alive).sum()) if not a.keep_empty else 0} empty trials (all channels flat)")
     ctx = get_context("spawn")
     with ctx.Pool(32) as p:
         DE = np.array(p.map(de_features, raw)); XR = np.array(p.map(raw_input, raw))

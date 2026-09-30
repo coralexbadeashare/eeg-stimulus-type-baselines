@@ -29,6 +29,11 @@ def check_epoch(eeg):
     return eeg
 
 
+def is_empty(epoch, tol=1e-3):
+    """True when every channel is flat after onset (all-zero trial: the headset was not recording)."""
+    return float(np.asarray(epoch, dtype=np.float32)[:, ONSET:ONSET + WIN].std(1).max()) < tol
+
+
 def _de(x):
     return 0.5 * np.log(2.0 * np.pi * np.e * (np.var(x, axis=-1, ddof=1) + 1e-10))
 
