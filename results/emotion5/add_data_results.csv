@@ -1,0 +1,5 @@
+features,training,image_test_acc,image_p,n_image,video_test_acc,video_p,n_video
+erp (v2),BEFORE images only,0.248,0.0103,370,0.096,0.926,84
+erp (v2),AFTER images + videos,0.26,0.0033,370,0.192,0.4429,84
+band 606,BEFORE images only,0.278,0.0003,370,0.158,0.1346,84
+band 606,AFTER images + videos,0.21,0.117,370,0.252,0.1153,84

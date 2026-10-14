@@ -67,6 +67,46 @@ same models were also tested on sessions they never saw:
 - **Training on all three days is better** than dropping day 1: on the same day-2/3 test
   recordings, stimulus-type EEGNet scores 0.614 with day 1 and 0.537 without it.
 
+## 5-emotion weights (for the generative texture)
+
+`checkpoints/emotion5/emotion_weights_v2.joblib` + `emotion_weights.py` give, for one trial, weights for
+5 emotions (Joy, Tenderness, Serenity, Nostalgia, Melancholy): the emotion category of the image on screen.
+
+**Pipeline**
+1. **Session alignment** (Euclidean alignment): per recording session, R = mean spatial covariance of its
+   trials (1-45 Hz, 0-4 s); every trial X -> R^(-1/2) X. This removes headset-placement differences
+   between sessions. It needs only unlabelled EEG of that session.
+2. **ERP shape:** 1-30 Hz, subtract the 0.5 s pre-stimulus baseline, keep 0-940 ms, average into
+   20 bins of ~47 ms per channel: 30 x 20 = 600 numbers.
+3. **Shrinkage LDA:** distance to each emotion's average response, measured in units of trial-to-trial
+   noise -> 5 probabilities = the weights.
+4. Optional: average the weights over a block of trials; `mode="calibrated"`; `sharp` (visual contrast only).
+
+**Accuracy** (top emotion, 5 classes, chance 20%; 370 clean image trials)
+
+| Test | Accuracy |
+|---|---|
+| Leave one recording out | **26.3%** (label-shuffle p = 0.0006) |
+| Held-out test recordings, untouched during development | **28.4%** (p = 0.007) |
+| Weights from a block of 2 / 8 trials | 28.6% / 33.4% (p = 0.01) |
+| Pictures never seen in training | 22.6% (p = 0.12, not significant) |
+| Video trials labelled with the same emotions | at chance |
+
+The model ranks emotions slightly better than chance, but the probability **values** are not
+reliable: calibrated, they match the class base rates. The signal does not transfer to other stimulus
+types and is not shown to generalise to new pictures. It may partly reflect the specific pictures.
+Treat the weights as an EEG-driven control for the artwork, not as a measurement of emotion.
+Tried and rejected (all scored the same way): logistic regression on band power (23.6%), EEGNet (21.8%),
+Riemannian tangent space (21.0%), ensembles, 144 setting variations (no gain on held-out recordings),
+frequencies above 45 Hz, and adding video trials. See `results/emotion5/`.
+
+```python
+from emotion_weights import EmotionWeightsV2
+ew = EmotionWeightsV2().calibrate(session_epochs)   # (n, 30, 1408) trials of one session, no labels
+w = ew.weights(epoch)                               # {"Joy": .., "Tenderness": .., ...}
+w = ew.weights_block(last_four_epochs)              # more accurate
+```
+
 ## Usage
 
 ```bash
@@ -85,8 +125,9 @@ models (EEGNet averages its 3 seeds).
 
 | File | Purpose |
 |---|---|
-| `checkpoints/` | the two checkpoint folders above |
-| `predict.py` | inference |
+| `checkpoints/` | stimulus_full, sentiment_full, emotion5 |
+| `predict.py` | inference (stimulus type, sentiment) |
+| `emotion_weights.py` | 5-emotion weights (emotion5 checkpoint) |
 | `features.py`, `models.py` | preprocessing, flat-trial detection, EEGNet, checkpoint loading |
 | `train.py` | training and every evaluation above (needs dataset access). `--configs R,ALL --lr_norm none` reproduces the checkpoints; the default configs run the stricter tests |
 | `split_comparison.py` | random vs calibration split comparison for logistic regression |

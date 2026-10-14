@@ -1,0 +1,7 @@
+model,bal_acc,null_mean,null_95,p
+lr606,0.236,0.197,0.229,0.0228
+tangent,0.21,0.208,0.238,0.4565
+erp,0.243,0.209,0.241,0.0396
+eegnet,0.218,0.205,0.24,0.2721
+lr606+tangent+erp+eegnet,0.217,0.204,0.234,0.2372
+nested ensemble (subset chosen per fold),0.202,0.203,0.235,0.5095

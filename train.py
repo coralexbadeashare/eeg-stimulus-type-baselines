@@ -216,9 +216,12 @@ def main():
     meta = meta.iloc[keep].reset_index(drop=True)
     raw = [np.asarray(ds[int(i)]["eeg_epoch"], dtype=np.float32) for i in keep]
     alive = np.array([not is_empty(e) for e in raw])      # garbage in, garbage out: drop all-zero trials
+    if "qc_ok" in ds.column_names and not a.keep_empty:   # dataset v3 carries a QC verdict per trial
+        qc = np.array(ds.select_columns(["qc_ok"])["qc_ok"])[keep]
+        print(f"[{a.task}] dropping {int((~qc).sum())} trials that fail QC (qc_ok = False)"); alive &= qc
     if not a.keep_empty:
         meta = meta[alive].reset_index(drop=True); raw = [e for e, k in zip(raw, alive) if k]
-    print(f"[{a.task}] dropped {int((~alive).sum()) if not a.keep_empty else 0} empty trials (all channels flat)")
+    print(f"[{a.task}] dropped {int((~alive).sum()) if not a.keep_empty else 0} trials in total (flat or failing QC)")
     ctx = get_context("spawn")
     with ctx.Pool(32) as p:
         DE = np.array(p.map(de_features, raw)); XR = np.array(p.map(raw_input, raw))
